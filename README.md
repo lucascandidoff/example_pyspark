@@ -1,2 +1,1 @@
-# example_pyspark
-Dataframe example with pyspark
+# Dataframe example with pyspark
