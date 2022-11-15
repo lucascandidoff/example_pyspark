@@ -1,5 +1,28 @@
 from pyspark.sql import SparkSession
 from pyspark.sql.types import StructType,StructField, StringType, IntegerType
+from pyspark.sql.functions import col, lit
+
+GLOBAL_VARIABLE = 'teste'
+
+teste = ''
+
+def teste1(x):
+  local_variable = x
+  y=x
+
+def teste2(x):
+  variable_teste = x
+  w=x
+
+
+def teste3(n):
+  n2 = 0
+  for i in range(n):
+    n2 = n2 + i
+
+
+# teste1('Text')
+teste3(10)
 
 spark = SparkSession.builder.getOrCreate()
 
@@ -31,6 +54,8 @@ schema2 = StructType([ \
 
 df1 = spark.createDataFrame(data=data1,schema=schema1)
 df2 = spark.createDataFrame(data=data2,schema=schema2)
+
+df2 = df2.withColumn('column_teste', lit('teste'))
 
 df1.show(truncate=False)
 df2.show(truncate=False)
