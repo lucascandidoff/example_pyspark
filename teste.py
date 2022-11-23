@@ -21,7 +21,7 @@ def teste3(n):
     n2 = n2 + i
 
 
-# teste1('Text')
+teste1('Text')
 teste3(10)
 
 spark = SparkSession.builder.getOrCreate()
@@ -55,7 +55,10 @@ schema2 = StructType([ \
 df1 = spark.createDataFrame(data=data1,schema=schema1)
 df2 = spark.createDataFrame(data=data2,schema=schema2)
 
-df2 = df2.withColumn('column_teste', lit('teste'))
+df = df1.join(df2, df1.id == df2.id, "left")    
 
-df1.show(truncate=False)
-df2.show(truncate=False)
+# df2 = df2.withColumn('column_teste', lit('teste'))
+
+df = df.select(col('id'),col('email'))
+
+df.show(truncate=False)
