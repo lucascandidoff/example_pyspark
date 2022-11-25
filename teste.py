@@ -1,6 +1,6 @@
 from pyspark.sql import SparkSession
 from pyspark.sql.types import StructType,StructField, StringType, IntegerType
-from pyspark.sql.functions import col, lit
+from pyspark.sql.functions import col, lit, split
 
 GLOBAL_VARIABLE = 'teste'
 
@@ -26,7 +26,7 @@ teste3(10)
 
 spark = SparkSession.builder.getOrCreate()
 
-data1 = [("James","","Smith",10,"M",3000),
+data1 = [("James,teste","","Smith",10,"M",3000),
     ("Michael","Rose","",20,"M",4000),
     ("Robert","","Williams",30,"M",4000),
     ("Maria","Anne","Jones",40,"F",4000),
@@ -43,7 +43,7 @@ schema1 = StructType([ \
   ])
 
 data2 = [(10,"smith@gmail.com"),
-    (30,"robert@gmail.com")
+      (30,"robert@gmail.com")
   ]
 
 schema2 = StructType([ \
@@ -55,10 +55,18 @@ schema2 = StructType([ \
 df1 = spark.createDataFrame(data=data1,schema=schema1)
 df2 = spark.createDataFrame(data=data2,schema=schema2)
 
-df = df1.join(df2, df1.id == df2.id, "left")    
+df = df1.unionAll(df2)
+
+# df = df1.merge(df2, left_on='lkey', right_on='rkey')
+
+# df = df1.join(df2, on=['id'], how='left')
+
+# df = df1.join(df2, df1.id == df2.id, "left")    
 
 # df2 = df2.withColumn('column_teste', lit('teste'))
 
-df = df.select(col('id'),col('email'))
+# df = df.select(col('id'),col('email'))
+
+# df1 = df1.withColumn('year', split(df1['firstname'], ',').getItem(1))
 
 df.show(truncate=False)
