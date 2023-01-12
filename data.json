@@ -1,0 +1,30 @@
+{
+  "base_date": "2021-9-27",
+  "incremental_type": "MASTER",
+  "extract": {
+    "bairro": {
+      "processed": false,
+      "column_names": ["id", "uf", "id_localidade", "nome", "abreviatura"]
+    },
+    "cpc": {
+      "processed": false,
+      "column_names": ["id", "uf", "id_localidade", "nome", "endereco", "cep"]
+    },
+    "grande_usuario": {
+      "processed": false,
+      "column_names": ["id", "uf", "id_localidade", "id_bairro", "id_logradouro", "nome", "endereco", "cep", "abreviatura"]
+    },
+    "localidade": {
+      "processed": false,
+      "column_names": ["id", "uf", "nome", "cep", "situacao", "tipo", "id_subordinacao", "abreviatura", "id_municipio_ibge"]
+    },
+    "logradouro": {
+      "processed": false,
+      "column_names": ["id", "uf", "id_localidade", "id_bairro_inicial", "id_bairro_final", "nome", "complemento", "cep", "tipo", "indicador_utilizacao", "abreviatura"]
+    },
+    "unid_oper": {
+      "processed": false,
+      "column_names": ["id", "uf", "id_localidade", "id_bairro", "id_logradouro", "nome", "endereco", "cep", "indicador_caixa_postal", "abreviatura"]
+    }
+  }
+}

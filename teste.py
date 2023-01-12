@@ -1,5 +1,5 @@
 from pyspark.sql import SparkSession
-from pyspark.sql.types import StructType,StructField, StringType, IntegerType
+from pyspark.sql.types import StructType,StructField, StringType, IntegerType, DataType
 from pyspark.sql.functions import col, lit, split
 
 GLOBAL_VARIABLE = 'teste'
@@ -42,12 +42,13 @@ schema1 = StructType([ \
     StructField("salary", IntegerType(), True) \
   ])
 
-data2 = [(10,"smith@gmail.com"),
-      (30,"robert@gmail.com")
+data2 = [(10,"Teste1","smith@gmail.com"),
+      (30,"Teste2","robert@gmail.com")
   ]
 
 schema2 = StructType([ \
     StructField("id", IntegerType(), True), \
+    StructField("firstname",StringType(),True), \
     StructField("email", StringType(), True)
   ])
 
@@ -55,7 +56,21 @@ schema2 = StructType([ \
 df1 = spark.createDataFrame(data=data1,schema=schema1)
 df2 = spark.createDataFrame(data=data2,schema=schema2)
 
-df = df1.unionAll(df2)
+df_teste1 = df1
+
+for i in df1.columns:
+  if i == 'id': continue
+  df_teste1 = df_teste1.withColumnRenamed(i,f"{i}_teste1")
+
+for i in df2.columns:
+  if i == 'id': continue
+  df_teste2 = df_teste2.withColumnRenamed(i,f"{i}_teste2")  
+
+df_teste1.show()
+
+
+
+# df = df1.join(df_municipio, on=['id_localidade'], how='left')                    
 
 # df = df1.merge(df2, left_on='lkey', right_on='rkey')
 
@@ -69,4 +84,4 @@ df = df1.unionAll(df2)
 
 # df1 = df1.withColumn('year', split(df1['firstname'], ',').getItem(1))
 
-df.show(truncate=False)
+# df.show(truncate=False)

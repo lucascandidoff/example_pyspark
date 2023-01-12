@@ -1,11 +1,31 @@
-import pandas as pd
+from pyspark.sql import SparkSession
+from pyspark.sql.types import StructType,StructField, StringType, IntegerType, DateType
+from pyspark.sql.functions import col, lit, split, to_date
+import datetime
 
-data1 = {'id': [1, 2], 'nome': ['Lucas', 'Bernardo']}
-data2 = {'id': [1, 2], 'nome': ['Candido', 'Mendes']}
+spark = SparkSession.builder.getOrCreate()
 
-df1 = pd.DataFrame(data=data1)
-df2 = pd.DataFrame(data=data2)
+data1 = [(10,"Lucas"),
+      (30,'Bernardo')
+  ]
 
-df = df1.merge(df2, on='id', how='left')
+schema1 = StructType([ \
+    StructField("id", IntegerType(), True), \
+    StructField("nome",StringType(),True)
+  ])
 
-print(df)
+data2 = [(10, datetime.datetime.strptime('2022-01-01', "%Y-%m-%d").date()),
+      (30, datetime.datetime.strptime('2022-06-01', "%Y-%m-%d").date())
+  ]
+
+schema2 = StructType([ \
+    StructField("id", IntegerType(), True), \
+    StructField("date_teste",DateType(),True)
+  ])
+
+df1 = spark.createDataFrame(data=data1,schema=schema1)
+df2 = spark.createDataFrame(data=data2,schema=schema2)
+
+df = df1.join(df2, on=['id'], how='left')
+
+df.show()

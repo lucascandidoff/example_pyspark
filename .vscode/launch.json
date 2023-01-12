@@ -8,7 +8,7 @@
             "name": "Python: Arquivo Atual",
             "type": "python",
             "request": "launch",
-            "program": "${workspaceFolder}/teste.py",
+            "program": "${workspaceFolder}/teste7.py",
             "console": "integratedTerminal",
             "justMyCode": true
         }
