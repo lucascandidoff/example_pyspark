@@ -1,6 +1,6 @@
 from pyspark.sql import SparkSession, Window
 from pyspark.sql.types import StructType,StructField, StringType, IntegerType, DataType, ArrayType
-from pyspark.sql.functions import col, lit, split, udf, when, explode, collect_list, first, row_number, monotonically_increasing_id
+from pyspark.sql.functions import col, lit, split, udf, when, explode_outer, collect_list, first, row_number, monotonically_increasing_id
 
 spark = SparkSession.builder.getOrCreate()
 
@@ -25,7 +25,7 @@ data = [
       ('Lucas',['teste1','teste2','teste3']),
       ('Matheus',['teste4','teste5','teste6']),
       ('Thais',['aaaaa']),
-      ('Ber',['kkkkk'])
+      ('Ber',[None])
     ]
 
 schema = StructType([ \
@@ -35,10 +35,13 @@ schema = StructType([ \
 
 df = spark.createDataFrame(data=data,schema=schema)  
 
-window = Window.orderBy("nome")
+df = df.withColumn('link', explode_outer('array_field'))
+df.show()
+
+# window = Window.orderBy("nome")
 
 # Adicionando uma nova coluna para numerar os registros
-df = df.withColumn("index", row_number().over(window))
+# df = df.withColumn("index", row_number().over(window))
 
 # for j in range(df.count()):
 #   for i, item in enumerate(df.select("array_field").filter(f"index == {j+1}").first()[0]):
@@ -49,14 +52,14 @@ df = df.withColumn("index", row_number().over(window))
 
 # Visualize o resultado
 
-udf1 = udf(lambda x : x.split()[0])
-df = df.select('index', explode('array_field').alias('link'), udf1(col('link')).alias('indextype'))
+# udf1 = udf(lambda x : x.split()[0])
+# df = df.select('index', explode('array_field').alias('link'), udf1(col('link')).alias('indextype'))
 
-df.show()
+# df.show()
 
-df = df.groupby('index').pivot('indextype').agg(first('link')).join(df,'index','left')
+# df = df.groupby('index').pivot('indextype').agg(first('link')).join(df,'index','left')
 
-df.show()
+# df.show()
 
 
 
