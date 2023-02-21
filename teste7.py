@@ -2,6 +2,8 @@ from pyspark.sql import SparkSession, Window
 from pyspark.sql.types import StructType,StructField, StringType, IntegerType, DataType, ArrayType
 from pyspark.sql.functions import col, lit, split, udf, when, explode_outer, collect_list, first, row_number, monotonically_increasing_id
 
+import tldextract
+
 spark = SparkSession.builder.getOrCreate()
 
 # data = [
@@ -21,22 +23,49 @@ spark = SparkSession.builder.getOrCreate()
 #   ])
 
 
+# data = [
+#       ('Lucas',['teste1','teste2','teste3']),
+#       ('Matheus',['teste4','teste5','teste6']),
+#       ('Thais',['aaaaa']),
+#       ('Ber',[None])
+#     ]
+
+# schema = StructType([ \
+#     StructField("nome", StringType(), True), \
+#     StructField("array_field", ArrayType(StringType()), True) \
+#   ])     
+
+
 data = [
-      ('Lucas',['teste1','teste2','teste3']),
-      ('Matheus',['teste4','teste5','teste6']),
-      ('Thais',['aaaaa']),
-      ('Ber',[None])
-    ]
+    (1,'11-165-19-200.ufrnet.br'),
+    (2,'google.com.br'),
+    (3,'camara-e.net'),
+    (4,'am.gov.br')
+]
 
 schema = StructType([ \
     StructField("nome", StringType(), True), \
-    StructField("array_field", ArrayType(StringType()), True) \
+    StructField("dominio", StringType(), True) \
   ])     
 
 df = spark.createDataFrame(data=data,schema=schema)  
 
-df = df.withColumn('link', explode_outer('array_field'))
-df.show()
+
+def separate_domain(domain):
+    extracted = tldextract.extract(domain)
+    new_domain = None
+    if extracted:
+        new_domain = f"{extracted.domain}.{extracted.suffix}"
+    if domain != new_domain:
+        return new_domain
+    return None
+
+separate_domain_udf = udf(separate_domain, StringType())
+
+df = df.withColumn('new_domain', separate_domain_udf(col('dominio')))
+
+df1 = df.select('dominio', 'new_domain').distinct()
+df1.show()
 
 # window = Window.orderBy("nome")
 
