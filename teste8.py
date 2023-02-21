@@ -11,7 +11,7 @@ df2 = spark.createDataFrame([("Jane", 'teste1'), ("Jim", 'll'), ("Joan", '112121
 # Utilizando o método except para encontrar nomes exclusivos em df1
 result = df1.select("name").subtract(df2.select("name"))
 
-df = df1.join(result, df1.name == result.name, 'inner')
+df = df1.join(result, on=['name'], how='inner')
 df.show()
 
 
