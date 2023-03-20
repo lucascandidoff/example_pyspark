@@ -1,7 +1,7 @@
 import requests
 import re
 import time
-from utils.lista import lista
+from utils.lista3 import lista
 from bs4 import BeautifulSoup
 from tqdm import tqdm
 
@@ -22,7 +22,7 @@ for texto in lista:
 
 # lista = []
 pbar = tqdm(nova_lista)
-arquivo = open('lista.txt', 'w')
+arquivo = open('lista3.txt', 'w')
 
 for texto,link in pbar:
     url = f"https://trends.builtwith.com/framework/{link}"
