@@ -5,12 +5,10 @@ from utils.lista import lista
 from bs4 import BeautifulSoup
 from tqdm import tqdm
 
-# nova_lista = []
-
 # lista = ['AUTO REPAIR AND CAR MECHANIC']
 
 pbar = tqdm(lista)
-arquivo = open('lista_completa.txt', 'w')
+arquivo = open('lista.txt', 'w')
 
 for tech in pbar:  
     # string_wit_numbers = re.sub(r"[a-zA-Z\-\' ']", '', texto)
@@ -41,30 +39,3 @@ for tech in pbar:
         arquivo.write(f'{tech},null\n')    
         print(f"Erro: {e}")
         print(f"Tech: {tech}")
-    # nova_lista.append((texto,result))
-
-# lista = []
-
-
-exit()
-
-pbar = tqdm(nova_lista)
-arquivo = open('lista_teste.txt', 'w')
-
-for texto,link in pbar:
-    url = f"https://trends.builtwith.com/framework/{link}"
-    response = requests.get(url)
-
-    if response.status_code == 200:        
-        soup = BeautifulSoup(response.text, "html.parser")
-        if "WordPress Theme" in soup.text:
-            # lista.append((texto,'WordPress Theme'))
-            arquivo.write(f'{texto},WordPress Theme\n')            
-            
-        time.sleep(0.5)
-    pbar.set_description('Progresso..')
-        
-
-# for texto1, texto2 in lista:
-#     with open('lista.txt', 'w') as f:
-#         f.write(f'{texto1},{texto2}')
